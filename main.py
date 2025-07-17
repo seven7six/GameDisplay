@@ -7,7 +7,7 @@ while True:
     data = response.json() if response and response.status_code == 200 else None
 
     now = datetime.datetime.now()
-    now = datetime.datetime(2025, 9, 7) # comment this line when you're done testing or change the date to simulate game days
+    now = datetime.datetime(2025, 9, 4) # comment this line when you're done testing or change the date to simulate game days
 
     today_games = []
 
@@ -30,15 +30,14 @@ while True:
                 elif comp['status']['type']['state'] == "inprogress": # change to proper once you figure it out
                     print(f"Q{comp['status']['period']} {comp['status']['clock']} / {comp['status']['displayClock']}")
 
-                print(f"Odds: {comp['odds'][0]}")
+                # print(f"Odds: {comp['odds'][0]}")
 
-                if comp['odds'][0]['awayTeamOdds']['favorite'] == True:
+                if comp['odds'][0]['awayTeamOdds']['favorite']:
                     fav = "away"
                 else:
                     fav = "home"
 
                 for team in competitors:
-                    #print(team)
                     if team['homeAway'] == "home":
                         loc = "(H)"
                         if fav == "home":
@@ -53,11 +52,14 @@ while True:
                     else:
                         status = ""
                     print(f"{team['team']['shortDisplayName']} {loc} ({team['records'][0]['summary']}) --> {team['score']}")
-                    print(team['team']['logo'])
+                    # print(team['team']['logo']) # graphics URL
                 print(status)
-                print('\n')
-                time.sleep(3)
+                # print('\n')
 
+                if competitors[0]['team']['shortDisplayName'] == "Bears" or competitors[1]['team']['shortDisplayName'] == "Bears":
+                    time.sleep(30) # pause longer on the bears when they are playing
+                else:
+                    time.sleep(5) # all other teams delay
     else:
             print("No Game Today --> spend time with your family instead")
             time.sleep(60*60)
