@@ -1,0 +1,1 @@
+Initial code for my led sign project. Grabs game info from the ESPN API, waits until the day of the game then shows upcoming and current games and the scores as well as the home/away and favorite to win. WLED integration to come.
