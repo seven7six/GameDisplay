@@ -1,6 +1,7 @@
 import requests
 import time
 import datetime
+import yfinance as yf
 
 favourite_team = "Bears" # input favourite team and when they are playing show nothing else to rotate all teams
 
@@ -9,7 +10,7 @@ while True:
     data = response.json() if response and response.status_code == 200 else None
 
     now = datetime.datetime.now()
-    now = datetime.datetime(2025, 9, 7) # comment this line when you're done testing or change the date to simulate game days
+    # now = datetime.datetime(2025, 9, 7) # comment this line when you're done testing or change the date to simulate game days
 
     today_games = []
 
@@ -85,5 +86,12 @@ while True:
 
                 time.sleep(5) # all other teams delay
     else:
-            print("No Game Today --> spend time with your family instead")
-            time.sleep(60*60)
+        print("No Game Today")
+        sleeping = 0
+        delay = 5
+        stocks = ['XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA']
+        while sleeping < 3600:
+            for stock in stocks:
+                print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
+                time.sleep(delay)
+                sleeping += delay
