@@ -2,12 +2,14 @@ import requests
 import time
 import datetime
 
+favourite_team = "Bears" # input favourite team and when they are playing show nothing else to rotate all teams
+
 while True:
     response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
     data = response.json() if response and response.status_code == 200 else None
 
     now = datetime.datetime.now()
-    now = datetime.datetime(2025, 9, 4) # comment this line when you're done testing or change the date to simulate game days
+    now = datetime.datetime(2025, 9, 7) # comment this line when you're done testing or change the date to simulate game days
 
     today_games = []
 
@@ -19,6 +21,29 @@ while True:
     # for x in today_games:
     #     print(x)
 
+    # process today's games looking for favourites and active games
+    pre_games = []
+    active_games = []
+    favourite_game = []
+
+    if len(today_games) > 0:
+        for event in today_games:
+            if event['competitions'][0]['status']['type']['state'] == "pre":
+                pre_games.append(event)
+            elif event['competitions'][0]['status']['type']['state'] != "pre" and (event['competitions'][0]['competitors'][0]['team']['shortDisplayName'] == favourite_team or event['competitions'][0]['competitors'][1]['team']['shortDisplayName'] == favourite_team):
+                favourite_game.append(event)
+            else:
+                active_games.append(event)
+
+        # no need to tie up time with pregames, focus on only the favorite team, otherwise if there's an active game on,
+        # show it, if neither advertise the schedule
+        if len(favourite_game) > 0:
+            today_games = favourite_game
+        elif len(active_games) > 0:
+            today_games = active_games
+        else:
+            today_games = pre_games
+
     if len(today_games) > 0:
         for event in today_games:
             for comp in (event['competitions']):
@@ -27,7 +52,7 @@ while True:
                 if comp['status']['type']['state'] == "pre":
                     gametime = event['competitions'][0]['status']['type']['shortDetail'].replace('/', " ").split(" ")
                     print(f"Starts @ {gametime[3]}{gametime[4]} {gametime[5]}")
-                elif comp['status']['type']['state'] == "inprogress": # change to proper once you figure it out
+                else:
                     print(f"Q{comp['status']['period']} {comp['status']['clock']} / {comp['status']['displayClock']}")
 
                 # print(f"Odds: {comp['odds'][0]}")
@@ -48,18 +73,17 @@ while True:
                             loc += "*"
 
                     if comp['status']['type']['completed']: #game is over
-                        status = "FINAL"
+                        status = "FINAL\n"
                     else:
                         status = ""
                     print(f"{team['team']['shortDisplayName']} {loc} ({team['records'][0]['summary']}) --> {team['score']}")
                     # print(team['team']['logo']) # graphics URL
                 print(status)
-                # print('\n')
 
-                if competitors[0]['team']['shortDisplayName'] == "Bears" or competitors[1]['team']['shortDisplayName'] == "Bears":
-                    time.sleep(30) # pause longer on the bears when they are playing
-                else:
-                    time.sleep(5) # all other teams delay
+                if competitors[0]['team']['shortDisplayName'] == favourite_team or competitors[1]['team']['shortDisplayName'] == favourite_team:
+                    time.sleep(15) # pause longer on the bears when they are playing
+
+                time.sleep(5) # all other teams delay
     else:
             print("No Game Today --> spend time with your family instead")
             time.sleep(60*60)
