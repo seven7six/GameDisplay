@@ -24,5 +24,5 @@ def set_wled_text(text_content, effect_id=50, speed=128):
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
 
-# Example usage
+# Example
 set_wled_text("GO BEARS!")
