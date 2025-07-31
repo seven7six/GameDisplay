@@ -89,7 +89,7 @@ while True:
         print("No Game Today")
         sleeping = 0
         delay = 5
-        stocks = ['XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA']
+        stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
         while sleeping < 3600:
             for stock in stocks:
                 print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
