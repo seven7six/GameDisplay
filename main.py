@@ -1,7 +1,9 @@
 import requests
+import json
 import time
 import datetime
 import yfinance as yf
+import wled
 
 favourite_team = "Bears" # input favourite team and when they are playing show nothing else to rotate all teams
 
@@ -10,7 +12,7 @@ while True:
     data = response.json() if response and response.status_code == 200 else None
 
     now = datetime.datetime.now()
-    # now = datetime.datetime(2025, 9, 7) # comment this line when you're done testing or change the date to simulate game days
+    # now = datetime.datetime(2025, 7, 31) # comment this line when you're done testing or change the date to simulate game days
 
     today_games = []
 
@@ -88,10 +90,14 @@ while True:
     else:
         print("No Game Today")
         sleeping = 0
-        delay = 5
+        delay = 120
         stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
         while sleeping < 3600:
+            text = ""
             for stock in stocks:
-                print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
-                time.sleep(delay)
-                sleeping += delay
+                # print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
+                text += f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}% "
+                # wled.set_wled_text(f"GO BEARS!")
+            wled.set_wled_text(text)
+            time.sleep(delay)
+            sleeping += delay
