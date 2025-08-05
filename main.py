@@ -1,5 +1,4 @@
 import requests
-import json
 import time
 import datetime
 import yfinance as yf
@@ -98,6 +97,6 @@ while True:
                 # print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
                 text += f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}% "
                 # wled.set_wled_text(f"GO BEARS!")
-            wled.set_wled_text(text)
+            wled.scroll_wled_text(text)
             time.sleep(delay)
             sleeping += delay
