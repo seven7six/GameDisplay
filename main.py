@@ -97,8 +97,8 @@ while True:
             pointer = 0
             while pointer < len(stocks):
                 text1 = f"{stocks[pointer]}"
-                text2 = f"{round(yf.Ticker(stocks[pointer]).info['regularMarketChangePercent'],2)}%"
-                wled.static_wled_text(text1,text2,"ff2500","000000")
+                text2 = f" {round(yf.Ticker(stocks[pointer]).info['regularMarketChangePercent'],2)}%"
+                wled.static_wled_text(text1,text2,"555555","000000")
                 pointer += 1
                 time.sleep(delay)
             sleeping += delay
