@@ -92,22 +92,13 @@ while True:
         sleeping = 0
         delay = 5
         stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
-        # while sleeping < 3600:
-        #     text = ""
-        #     # for stock in stocks:
-        #     #     # print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
-        #     #     text += f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}% "
-        #     #     # wled.set_wled_text(f"GO BEARS!")
-        #     # # wled.scroll_wled_text(text)
-        #     # # wled.static_wled_text(text, 0, "555555", "000000")
-        #     pointer = 0
-        #     while pointer < len(stocks):
-        #         # wled.clear_wled()
-        #         text = f"{stocks[pointer]}"
-        #         print(text)
-        #         wled.static_wled_text(text,0,"ff2500","000000")
-        #         text = f"{round(yf.Ticker(stocks[pointer]).info['regularMarketChangePercent'],2)}%"
-        #         wled.static_wled_text(text, 1, "ff2500", "000000")
-        #         pointer += 1
-        #         time.sleep(delay)
-        #     sleeping += delay
+        while sleeping < 3600:
+            text = ""
+            pointer = 0
+            while pointer < len(stocks):
+                text1 = f"{stocks[pointer]}"
+                text2 = f"{round(yf.Ticker(stocks[pointer]).info['regularMarketChangePercent'],2)}%"
+                wled.static_wled_text(text1,text2,"ff2500","000000")
+                pointer += 1
+                time.sleep(delay)
+            sleeping += delay

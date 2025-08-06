@@ -36,7 +36,7 @@ def assemble(grid, letter, line):
         while col < len(grid[row]):
             if line == 0 and 1 <= row <= 7 and grid[row][col] == -1:
                 z = 0
-                while z < len(letter[row-1]):
+                while z < len(letter[row-1]) and col < 32:
                     grid[row][col] = letter[row-1][z]
                     z += 1
                     col += 1
@@ -45,18 +45,16 @@ def assemble(grid, letter, line):
             elif line == 1 and 9 <= row <= 15 and grid[row][col] == -1:
                 z = 0
                 while z < len(letter[row-9]):
-                    # print(row)
                     grid[row][col] = letter[row-9][z]
                     z += 1
                     col += 1
                 if row <15:
                     row += 1
                 else:
-                    break
+                    return grid
                 col = 0
             else:
                 col += 1
-            # print(f"{row},{col}")
         col = 0
         row += 1
 
@@ -81,7 +79,7 @@ def clear_wled():
             "i": led_map
         }
     }
-    print(payload)
+    # print(payload)
 
     headers = {'Content-Type': 'application/json'}
     try:
@@ -113,14 +111,33 @@ def scroll_wled_text(text_content, effect_id=122, speed=128):
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
 
-def static_wled_text(text_content, line, fg_color, bg_color):
-    text_content = text_content.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
+def static_wled_text(text_content1, text_content2, fg_color, bg_color):
+    text_content1 = text_content1.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
+    text_content2 = text_content2.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
+
     led_map = []
-    grid = d.clear_grid # get the blank grid from the dictionary module
-    for x in d.clear_grid:
-        print(x)
-    for letter in text_content:
-        grid = assemble(grid, d.letter[letter], line)
+    # grid = d.clear_grid # get the blank grid from the dictionary module
+    grid = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+
+    for letter in text_content1:
+        grid = assemble(grid, d.letter[letter],0)
+    for letter in text_content2:
+        grid = assemble(grid, d.letter[letter],1)
 
     for y in grid:
         for x in y:
@@ -139,20 +156,18 @@ def static_wled_text(text_content, line, fg_color, bg_color):
             "i": led_map
         }
     }
-    print(payload)
+    # print(payload)
 
     headers = {'Content-Type': 'application/json'}
     try:
         response = requests.post(f"http://{wled_ip}/json/state", data=json.dumps(payload), headers=headers)
         response.raise_for_status()  # Raise an exception for bad status codes
-        print(f"Text '{text_content}' sent successfully to WLED.")
+        print(f"Text '{text_content1}' / '{text_content2}' sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
 # Examples
 # set_wled_text("GO BEARS!")
 # set_pixels("adf")
-static_wled_text("line: 0",0,"ff2500","000000")
-static_wled_text("line: 1",1,"ff2500","000000")
-# static_wled_text("line: 2",0,"ff2500","000000")
-# static_wled_text("line: 3",1,"ff2500","000000")
+# static_wled_text("line: 0","line: 1","ff2500","000000")
+# static_wled_text("line: 1","line: 2","ff2500","000000")
 # clear_wled()
