@@ -18,8 +18,9 @@ while True:
     # compile a list of today's games
     for event in (data.get('events')):
         gametime = event['competitions'][0]['status']['type']['shortDetail'].replace('/', " ").split(" ")
-        if int(gametime[0]) == int(now.strftime("%m")) and int(gametime[1]) == int(now.strftime("%d")):
-            today_games.append(event)
+        if gametime[0] != "Final":
+            if int(gametime[0]) == int(now.strftime("%m")) and int(gametime[1]) == int(now.strftime("%d")):
+                today_games.append(event)
     # for x in today_games:
     #     print(x)
 
@@ -89,14 +90,24 @@ while True:
     else:
         print("No Game Today")
         sleeping = 0
-        delay = 120
+        delay = 5
         stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
-        while sleeping < 3600:
-            text = ""
-            for stock in stocks:
-                # print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
-                text += f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}% "
-                # wled.set_wled_text(f"GO BEARS!")
-            wled.scroll_wled_text(text)
-            time.sleep(delay)
-            sleeping += delay
+        # while sleeping < 3600:
+        #     text = ""
+        #     # for stock in stocks:
+        #     #     # print(f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}%")
+        #     #     text += f"{stock} {round(yf.Ticker(stock).info['regularMarketChangePercent'],2)}% "
+        #     #     # wled.set_wled_text(f"GO BEARS!")
+        #     # # wled.scroll_wled_text(text)
+        #     # # wled.static_wled_text(text, 0, "555555", "000000")
+        #     pointer = 0
+        #     while pointer < len(stocks):
+        #         # wled.clear_wled()
+        #         text = f"{stocks[pointer]}"
+        #         print(text)
+        #         wled.static_wled_text(text,0,"ff2500","000000")
+        #         text = f"{round(yf.Ticker(stocks[pointer]).info['regularMarketChangePercent'],2)}%"
+        #         wled.static_wled_text(text, 1, "ff2500", "000000")
+        #         pointer += 1
+        #         time.sleep(delay)
+        #     sleeping += delay
