@@ -150,9 +150,9 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=N
         grid = assemble(grid, d.letter[letter],1)
 
     if special is not None:
-        for valuex in range(len(d.letter[special['val']][0])):
-            for valuey in range(len(d.letter[special['val']])):
-                grid[special['y']+valuey][special['x']+valuex] = d.letter[special['val']][valuey][valuex]
+        for valuey in range(len(d.letter[special['val']][0])):
+            for valuex in range(len(d.letter[special['val']])):
+                grid[special['x']+valuex][special['y']+valuey] = d.letter[special['val']][valuex][valuey]
 
     for y in grid:
         for x in y:
