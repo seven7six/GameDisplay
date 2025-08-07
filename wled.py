@@ -1,6 +1,7 @@
 import requests
 import json
 import dictionary as d
+import time
 
 wled_ip = "192.168.0.32"  # Replace with your WLED device's IP
 
@@ -111,7 +112,16 @@ def scroll_wled_text(text_content, effect_id=122, speed=128):
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
 
-def static_wled_text(text_content1, text_content2, fg_color, bg_color):
+def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=None):
+    """text_content1 is the first line of text
+    text_content2 is the second line of text
+    fg_color is foreground color
+    bg_color is background color
+    special is the ability to place a letter anywhere on the grid send a dictionary containing:
+     {'x': 27,
+      'y': 6,
+      'val': "F"}
+      where x and y are the coordinates and val is the letter or symbol in the dictionary to place"""
     text_content1 = text_content1.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
     text_content2 = text_content2.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
 
@@ -138,6 +148,11 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color):
         grid = assemble(grid, d.letter[letter],0)
     for letter in text_content2:
         grid = assemble(grid, d.letter[letter],1)
+
+    if special is not None:
+        for valuex in range(len(d.letter[special['val']][0])):
+            for valuey in range(len(d.letter[special['val']])):
+                grid[special['y']+valuey][special['x']+valuex] = d.letter[special['val']][valuey][valuex]
 
     for y in grid:
         for x in y:
@@ -166,7 +181,7 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color):
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
 
-def celebrate():
+def celebrate(duration):
 
     payload = {
         'on': True,
@@ -227,6 +242,8 @@ def celebrate():
         print(f"Layers sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
+
+    time.sleep(duration) # let the animation run
 
 # Examples
 # set_wled_text("GO BEARS!")

@@ -1,8 +1,11 @@
 import requests
 import time
-import datetime
+# import datetime
+from datetime import datetime, UTC
+import zoneinfo
 import yfinance as yf
 import wled
+from wled import celebrate
 
 favourite_team = "Bears" # input favourite team and when they are playing show nothing else to rotate all teams
 
@@ -10,17 +13,18 @@ while True:
     response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
     data = response.json() if response and response.status_code == 200 else None
 
-    now = datetime.datetime.now()
-    # now = datetime.datetime(2025, 7, 31) # comment this line when you're done testing or change the date to simulate game days
+    now = datetime.now()
+    # now = datetime(2025, 7, 31) # comment this line when you're done testing or change the date to simulate game days
 
     today_games = []
 
     # compile a list of today's games
     for event in (data.get('events')):
-        gametime = event['competitions'][0]['status']['type']['shortDetail'].replace('/', " ").split(" ")
-        if gametime[0] != "Final":
-            if int(gametime[0]) == int(now.strftime("%m")) and int(gametime[1]) == int(now.strftime("%d")):
-                today_games.append(event)
+        gametime = datetime.strptime(event['competitions'][0]['date'], "%Y-%m-%dT%H:%MZ")
+        gametime = datetime.fromisoformat(str(gametime)).replace(tzinfo=UTC).astimezone()
+        # print(gametime)
+        if gametime.strftime("%m") == now.strftime("%m") and gametime.strftime("%d") == now.strftime("%d"):
+            today_games.append(event)
     # for x in today_games:
     #     print(x)
 
@@ -33,9 +37,9 @@ while True:
         for event in today_games:
             if event['competitions'][0]['status']['type']['state'] == "pre":
                 pre_games.append(event)
-            elif event['competitions'][0]['status']['type']['state'] != "pre" and (event['competitions'][0]['competitors'][0]['team']['shortDisplayName'] == favourite_team or event['competitions'][0]['competitors'][1]['team']['shortDisplayName'] == favourite_team):
+            elif event['competitions'][0]['status']['type']['state'] != "pre" and event['competitions'][0]['status']['type']['state'] != "post" and (event['competitions'][0]['competitors'][0]['team']['shortDisplayName'] == favourite_team or event['competitions'][0]['competitors'][1]['team']['shortDisplayName'] == favourite_team):
                 favourite_game.append(event)
-            else:
+            else: # this covers active and post games
                 active_games.append(event)
 
         # no need to tie up time with pregames, focus on only the favorite team, otherwise if there's an active game on,
@@ -58,32 +62,37 @@ while True:
                 else:
                     print(f"Q{comp['status']['period']} {comp['status']['clock']} / {comp['status']['displayClock']}")
 
-                # print(f"Odds: {comp['odds'][0]}")
 
-                if comp['odds'][0]['awayTeamOdds']['favorite']:
-                    fav = "away"
-                else:
-                    fav = "home"
+                # if comp['odds'][0]['awayTeamOdds']['favorite']:
+                #     fav = "away"
+                # else:
+                #     fav = "home"
 
-                for team in competitors:
-                    if team['homeAway'] == "home":
-                        loc = "(H)"
-                        if fav == "home":
-                            loc += "*"
-                    else:
-                        loc = "(A)"
-                        if fav == "away":
-                            loc += "*"
+                # for team in competitors:
+                    # if team['homeAway'] == "home":
+                    #     loc = "(H)"
+                        # if fav == "home":
+                        #     loc += "*"
+                    # else:
+                    #     loc = "(A)"
+                        # if fav == "away":
+                        #     loc += "*"
 
-                    if comp['status']['type']['completed']: #game is over
-                        status = "FINAL\n"
-                    else:
-                        status = ""
-                    print(f"{team['team']['shortDisplayName']} {loc} ({team['records'][0]['summary']}) --> {team['score']}")
+
+                    # print(f"{team['team']['abbreviation']} ({team['records'][0]['summary']}) --> {team['score']}")
                     # print(team['team']['logo']) # graphics URL
-                print(status)
+                # print(status)
+                if comp['status']['type']['completed']: #game is over
+                    status = {'x': 27,
+                              'y': 6,
+                              'val': "F"}
+                else:
+                    status = None
+                team1 = f"{competitors[0]['team']['abbreviation']}-{competitors[0]['score']}"
+                team2 = f"{competitors[1]['team']['abbreviation']}-{competitors[1]['score']}"
+                wled.static_wled_text(team1, team2,"555555","000000", status)
 
-                if competitors[0]['team']['shortDisplayName'] == favourite_team or competitors[1]['team']['shortDisplayName'] == favourite_team:
+                if competitors[0]['team']['abbreviation'] == favourite_team or competitors[1]['team']['abbreviation'] == favourite_team:
                     time.sleep(15) # pause longer on the bears when they are playing
 
                 time.sleep(5) # all other teams delay
@@ -101,4 +110,5 @@ while True:
                 wled.static_wled_text(text1,text2,"555555","000000")
                 pointer += 1
                 time.sleep(delay)
+                celebrate(5)
             sleeping += delay
