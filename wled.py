@@ -165,9 +165,77 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color):
         print(f"Text '{text_content1}' / '{text_content2}' sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
+
+def celebrate():
+
+    payload = {
+        'on': True,
+        'bri': 128,
+        'transition': 7,
+        'ps': -1,
+        'pl': -1,
+        'ledmap': 0,
+        'AudioReactive': {'on': False},
+        'nl': {'on': False, 'dur': 60, 'mode': 1, 'tbri': 0, 'rem': -1},
+        'udpn': {'send': False, 'recv': True, 'sgrp': 1, 'rgrp': 1},
+        'lor': 0,
+        'mainseg': 0,
+        'seg': [{
+            'id': 0,
+            'start': 0,
+            'stop': 32,
+            'startY': 0,
+            'stopY': 16,
+            'len': 32,
+            'grp': 1,
+            'spc': 0,
+            'of': 0,
+            'on': True,
+            'frz': False,
+            'bri': 255,
+            'cct': 127,
+            'set': 0,
+            'n': 'hello',
+            'col': [[255, 94, 242], [0, 0, 0], [0, 0, 0]],
+            'fx': 167,
+            'sx': 128,
+            'ix': 128,
+            'pal': 0,
+            'c1': 128,
+            'c2': 128,
+            'c3': 16,
+            'sel': True,
+            'rev': False,
+            'mi': False,
+            'rY': False,
+            'mY': False,
+            'tp': False,
+            'o1': False,
+            'o2': False,
+            'o3': False,
+            'si': 0,
+            'm12': 0
+        }]
+    }
+
+    # print(payload)
+
+    headers = {'Content-Type': 'application/json'}
+    try:
+        response = requests.post(f"http://{wled_ip}/json/state", data=json.dumps(payload), headers=headers)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        print(f"Layers sent successfully to WLED.")
+    except requests.exceptions.RequestException as e:
+        print(f"Error sending text to WLED: {e}")
+
 # Examples
 # set_wled_text("GO BEARS!")
 # set_pixels("adf")
 # static_wled_text("line: 0","line: 1","ff2500","000000")
 # static_wled_text("line: 1","line: 2","ff2500","000000")
 # clear_wled()
+# celebrate()
+#
+# # get state
+# response = requests.get(f"http://{wled_ip}/json/state")
+# print(response.json())
