@@ -8,6 +8,7 @@ import wled
 from wled import celebrate
 
 favourite_team = "Bears" # input favourite team and when they are playing show nothing else to rotate all teams
+prev_game_data = []
 
 while True:
     response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
@@ -25,6 +26,17 @@ while True:
         # print(gametime)
         if gametime.strftime("%m") == now.strftime("%m") and gametime.strftime("%d") == now.strftime("%d"):
             today_games.append(event)
+
+    # clear stale historical data
+    found = 0
+    for prev_event in prev_game_data:
+        prev_gametime = datetime.strptime(prev_event['competitions'][0]['date'], "%Y-%m-%dT%H:%MZ")
+        prev_gametime = datetime.fromisoformat(str(prev_gametime)).replace(tzinfo=UTC).astimezone()
+        if prev_gametime.strftime("%m") == now.strftime("%m") and prev_gametime.strftime("%d") == now.strftime("%d"):
+            found += 1
+
+    if found == 0:
+        prev_event = [] # if we're running for more than a day we need to clear this old data
     # for x in today_games:
     #     print(x)
 
@@ -50,6 +62,9 @@ while True:
             today_games = active_games
         else:
             today_games = pre_games
+
+        if prev_game_data == []:
+            prev_game_data = today_games
 
     if len(today_games) > 0:
         for event in today_games:
@@ -82,20 +97,38 @@ while True:
                     # print(f"{team['team']['abbreviation']} ({team['records'][0]['summary']}) --> {team['score']}")
                     # print(team['team']['logo']) # graphics URL
                 # print(status)
-                if comp['status']['type']['completed']: #game is over
-                    status = {'x': 27,
-                              'y': 6,
-                              'val': "F"}
-                else:
-                    status = None
                 team1 = f"{competitors[0]['team']['abbreviation']}-{competitors[0]['score']}"
                 team2 = f"{competitors[1]['team']['abbreviation']}-{competitors[1]['score']}"
+                if comp['status']['type']['completed']: #game is over
+                    status = {'x': 0,
+                              'y': 28,
+                              'val': "FINAL"}
+                else:
+                    status = None
+                    for prev_event in prev_game_data:
+                        for prev_comp in (prev_event['competitions']):
+                            for prev_competitors in prev_comp['competitors']:
+                                if competitors[0]['team']['abbreviation'] == prev_competitors['team']['abbreviation']:
+                                    print(f"{competitors[0]['team']['abbreviation']}")
+                                    print(f"old {prev_competitors['score']} new {competitors[0]['score']}")
+                                    if prev_competitors['score'] != competitors[0]['score']:
+                                        celebrate(5)
+                                        prev_game_data = today_games
+                                        team1 += "*"
+                                elif competitors[1]['team']['abbreviation'] == prev_competitors['team']['abbreviation']:
+                                    print(f"{competitors[1]['team']['abbreviation']} ")
+                                    print(f"old {prev_competitors['score']} new {competitors[1]['score']}")
+                                    if prev_competitors['score'] != competitors[1]['score']:
+                                        celebrate(5)
+                                        prev_game_data = today_games
+                                        team2 += "*"
+
                 wled.static_wled_text(team1, team2,"555555","000000", status)
 
-                if competitors[0]['team']['abbreviation'] == favourite_team or competitors[1]['team']['abbreviation'] == favourite_team:
-                    time.sleep(15) # pause longer on the bears when they are playing
+                # if competitors[0]['team']['abbreviation'] == favourite_team or competitors[1]['team']['abbreviation'] == favourite_team:
+                #     time.sleep(15) # pause longer on the bears when they are playing
 
-                time.sleep(5) # all other teams delay
+                time.sleep(15) # all other teams delay
     else:
         print("No Game Today")
         sleeping = 0

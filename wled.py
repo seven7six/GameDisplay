@@ -117,10 +117,10 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=N
     text_content2 is the second line of text
     fg_color is foreground color
     bg_color is background color
-    special is the ability to place a letter anywhere on the grid send a dictionary containing:
+    special is the ability to place a letter anywhere (no error checking!!!) on the grid send a dictionary containing:
      {'x': 27,
       'y': 6,
-      'val': "F"}
+      'val': "FINAL"}
       where x and y are the coordinates and val is the letter or symbol in the dictionary to place"""
     text_content1 = text_content1.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
     text_content2 = text_content2.upper() # LED DISPLAY IS UPPERCASE ONLY but allow lowercase and convert it
