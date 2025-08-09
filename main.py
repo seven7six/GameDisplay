@@ -5,7 +5,6 @@ from datetime import datetime, UTC
 import zoneinfo
 import yfinance as yf
 import wled
-from wled import celebrate
 
 favourite_team = "Bears" # input favourite team and when they are playing show nothing else to rotate all teams
 prev_game_data = []
@@ -112,14 +111,14 @@ while True:
                                     print(f"{competitors[0]['team']['abbreviation']}")
                                     print(f"old {prev_competitors['score']} new {competitors[0]['score']}")
                                     if prev_competitors['score'] != competitors[0]['score']:
-                                        celebrate(5)
+                                        wled.celebrate()
                                         prev_game_data = today_games
                                         team1 += "*"
                                 elif competitors[1]['team']['abbreviation'] == prev_competitors['team']['abbreviation']:
                                     print(f"{competitors[1]['team']['abbreviation']} ")
                                     print(f"old {prev_competitors['score']} new {competitors[1]['score']}")
                                     if prev_competitors['score'] != competitors[1]['score']:
-                                        celebrate(5)
+                                        wled.celebrate()
                                         prev_game_data = today_games
                                         team2 += "*"
 
@@ -143,5 +142,5 @@ while True:
                 wled.static_wled_text(text1,text2,"555555","000000")
                 pointer += 1
                 time.sleep(delay)
-                celebrate(5)
+                wled.celebrate()
             sleeping += delay

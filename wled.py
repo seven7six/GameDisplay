@@ -75,6 +75,8 @@ def clear_wled():
     payload = {
         "on": True,
         "bri": 128,
+        "ps": -1,
+        "pl": -1,
         "v": True,
         "seg": {
             "i": led_map
@@ -181,58 +183,108 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=N
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
 
-def celebrate(duration):
-
+def celebrate():
+    """create a preset using https://github.com/ajotanc/PixelMagicTool then find the id and modify these:
+    'ps': 5, 'repeat': 3 as needed. I used this tool to resize my gif selecting center and crop
+    https://ezgif.com/resize/ezgif-325e8de265b55d.gif"""
+    # payload = {
+    #     'on': True,
+    #     'bri': 128,
+    #     'transition': 7,
+    #     'ps': -1,
+    #     'pl': -1,
+    #     'ledmap': 0,
+    #     'AudioReactive': {'on': False},
+    #     'nl': {'on': False, 'dur': 60, 'mode': 1, 'tbri': 0, 'rem': -1},
+    #     'udpn': {'send': False, 'recv': True, 'sgrp': 1, 'rgrp': 1},
+    #     'lor': 0,
+    #     'mainseg': 0,
+    #     'seg': [{
+    #         'id': 0,
+    #         'start': 0,
+    #         'stop': 32,
+    #         'startY': 0,
+    #         'stopY': 16,
+    #         'len': 32,
+    #         'grp': 1,
+    #         'spc': 0,
+    #         'of': 0,
+    #         'on': True,
+    #         'frz': False,
+    #         'bri': 255,
+    #         'cct': 127,
+    #         'set': 0,
+    #         'n': 'hello',
+    #         'col': [[255, 94, 242], [0, 0, 0], [0, 0, 0]],
+    #         'fx': 167,
+    #         'sx': 128,
+    #         'ix': 128,
+    #         'pal': 0,
+    #         'c1': 128,
+    #         'c2': 128,
+    #         'c3': 16,
+    #         'sel': True,
+    #         'rev': False,
+    #         'mi': False,
+    #         'rY': False,
+    #         'mY': False,
+    #         'tp': False,
+    #         'o1': False,
+    #         'o2': False,
+    #         'o3': False,
+    #         'si': 0,
+    #         'm12': 0
+    #     }]
+    # }
     payload = {
         'on': True,
         'bri': 128,
         'transition': 7,
-        'ps': -1,
-        'pl': -1,
+        'ps': 5,
+        'repeat': 3,
         'ledmap': 0,
         'AudioReactive': {'on': False},
         'nl': {'on': False, 'dur': 60, 'mode': 1, 'tbri': 0, 'rem': -1},
         'udpn': {'send': False, 'recv': True, 'sgrp': 1, 'rgrp': 1},
         'lor': 0,
         'mainseg': 0,
-        'seg': [{
-            'id': 0,
-            'start': 0,
-            'stop': 32,
-            'startY': 0,
-            'stopY': 16,
-            'len': 32,
-            'grp': 1,
-            'spc': 0,
-            'of': 0,
-            'on': True,
-            'frz': False,
-            'bri': 255,
-            'cct': 127,
-            'set': 0,
-            'n': 'hello',
-            'col': [[255, 94, 242], [0, 0, 0], [0, 0, 0]],
-            'fx': 167,
-            'sx': 128,
-            'ix': 128,
-            'pal': 0,
-            'c1': 128,
-            'c2': 128,
-            'c3': 16,
-            'sel': True,
-            'rev': False,
-            'mi': False,
-            'rY': False,
-            'mY': False,
-            'tp': False,
-            'o1': False,
-            'o2': False,
-            'o3': False,
-            'si': 0,
-            'm12': 0
-        }]
-    }
-
+        'seg': [
+            {'id': 0,
+             'start': 0,
+             'stop': 32,
+             'startY': 0,
+             'stopY': 16,
+             'len': 32,
+             'grp': 1,
+             'spc': 0,
+             'of': 0,
+             'on': True,
+             'frz': True,
+             'bri': 255,
+             'cct': 127,
+             'set': 0,
+             'col': [[255, 160, 0], [0, 0, 0], [0, 0, 0]],
+             'fx': 0,
+             'sx': 128,
+             'ix': 128,
+             'pal': 0,
+             'c1': 128,
+             'c2': 128,
+             'c3': 16,
+             'sel': True,
+             'rev': False,
+             'mi': False,
+             'rY': False,
+             'mY': False,
+             'tp': False,
+             'o1': False,
+             'o2': False,
+             'o3': False,
+             'si': 0,
+             'm12': 0
+             }
+        ]
+}
     # print(payload)
 
     headers = {'Content-Type': 'application/json'}
@@ -242,8 +294,8 @@ def celebrate(duration):
         print(f"Layers sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
-
-    time.sleep(duration) # let the animation run
+    time.sleep(6) # let the animation run tweak this longer if the animation is frozen to the screen after playing
+    clear_wled()
 
 # Examples
 # set_wled_text("GO BEARS!")
