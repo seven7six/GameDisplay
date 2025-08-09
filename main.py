@@ -95,15 +95,41 @@ while True:
 
                     # print(f"{team['team']['abbreviation']} ({team['records'][0]['summary']}) --> {team['score']}")
                     # print(team['team']['logo']) # graphics URL
-                # print(status)
+                print(comp['status']['period'])
                 team1 = f"{competitors[0]['team']['abbreviation']}-{competitors[0]['score']}"
                 team2 = f"{competitors[1]['team']['abbreviation']}-{competitors[1]['score']}"
                 if comp['status']['type']['completed']: #game is over
                     status = {'x': 0,
                               'y': 28,
                               'val': "FINAL"}
+                elif int(comp['status']['period']) == 1:
+                    print("Q1")
+                    status = {'x': 0,
+                              'y': 29,
+                              'val': "Q1"}
+                elif int(comp['status']['period']) == 2:
+                    print("Q2")
+                    status = {'x': 0,
+                              'y': 29,
+                              'val': "Q2"}
+                elif int(comp['status']['period']) == 3:
+                    print("Q3")
+                    status = {'x': 0,
+                              'y': 29,
+                              'val': "Q3"}
+                elif int(comp['status']['period']) == 4:
+                    print("Q4")
+                    status = {'x': 0,
+                              'y': 29,
+                              'val': "Q4"}
                 else:
-                    status = None
+                    print("Q?")
+                    status = {'x': 0,
+                              'y': 29,
+                              'val': "OT"}
+
+                if not comp['status']['type']['completed']:
+                    #status = None
                     for prev_event in prev_game_data:
                         for prev_comp in (prev_event['competitions']):
                             for prev_competitors in prev_comp['competitors']:
