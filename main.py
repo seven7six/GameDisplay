@@ -1,7 +1,8 @@
 # python venv:
 # python3 -m venv myenv
 # source myenv/bin/activate - install dependencies
-# run without activation use python reference venv python /home/user/scripts/GameDisplay/myenv/bin/python3 /home/user/scripts/GameDisplay/main.py
+# run without activation use python reference venv python (have to sudo in linux to get socket permissions for ping it seems)
+# sudo /home/user/scripts/GameDisplay/myenv/bin/python3 /home/user/scripts/GameDisplay/main.py
 
 import requests
 import time
