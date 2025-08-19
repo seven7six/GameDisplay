@@ -2,6 +2,7 @@ import requests
 import json
 import dictionary as d
 import time
+from pythonping import ping
 
 wled_ip = "192.168.0.32"  # Replace with your WLED device's IP
 
@@ -113,6 +114,11 @@ def scroll_wled_text(text_content, effect_id=122, speed=128):
         print(f"Text '{text_content}' sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
+        pingable = False
+        while not pingable:
+            ping_responses = ping(wled_ip, count=1, timeout=2)
+            pingable = ping_responses.success()
+            print(f"{wled_ip} ping response was {ping_responses.success()}")
 
 def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=None):
     """text_content1 is the first line of text
@@ -182,6 +188,11 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=N
         print(f"Text '{text_content1}' / '{text_content2}' sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
+        pingable = False
+        while not pingable:
+            ping_responses = ping(wled_ip, count=1, timeout=2)
+            pingable = ping_responses.success()
+            print(f"{wled_ip} ping response was {ping_responses.success()}")
 
 def celebrate():
     """create a preset using https://github.com/ajotanc/PixelMagicTool then find the id and modify these:
@@ -294,6 +305,11 @@ def celebrate():
         print(f"Layers sent successfully to WLED.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending text to WLED: {e}")
+        pingable = False
+        while not pingable:
+            ping_responses = ping(wled_ip, count=1, timeout=2)
+            pingable = ping_responses.success()
+            print(f"{wled_ip} ping response was {ping_responses.success()}")
     time.sleep(6) # let the animation run tweak this longer if the animation is frozen to the screen after playing
     clear_wled()
 
