@@ -119,6 +119,7 @@ def scroll_wled_text(text_content, effect_id=122, speed=128):
             ping_responses = ping(wled_ip, count=1, timeout=2)
             pingable = ping_responses.success()
             print(f"{wled_ip} ping response was {ping_responses.success()}")
+            time.sleep(10)
 
 def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=None):
     """text_content1 is the first line of text
@@ -193,6 +194,7 @@ def static_wled_text(text_content1, text_content2, fg_color, bg_color, special=N
             ping_responses = ping(wled_ip, count=1, timeout=2)
             pingable = ping_responses.success()
             print(f"{wled_ip} ping response was {ping_responses.success()}")
+            time.sleep(10)
 
 def celebrate():
     """create a preset using https://github.com/ajotanc/PixelMagicTool then find the id and modify these:
@@ -310,6 +312,7 @@ def celebrate():
             ping_responses = ping(wled_ip, count=1, timeout=2)
             pingable = ping_responses.success()
             print(f"{wled_ip} ping response was {ping_responses.success()}")
+            time.sleep(10)
     time.sleep(6) # let the animation run tweak this longer if the animation is frozen to the screen after playing
     clear_wled()
 
