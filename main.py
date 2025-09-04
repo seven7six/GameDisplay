@@ -104,7 +104,11 @@ while True:
                 print(comp['status']['period'])
                 team1 = f"{competitors[0]['team']['abbreviation']}-{competitors[0]['score']}"
                 team2 = f"{competitors[1]['team']['abbreviation']}-{competitors[1]['score']}"
-                if comp['status']['type']['completed']: #game is over
+                if comp['status']['type']['state'] == "pre":
+                    team1 = f"{competitors[0]['team']['abbreviation']}-{competitors[1]['team']['abbreviation']}"
+                    team2 = f"{gametime[3]}{gametime[4]}"
+                    status = None
+                elif (comp)['status']['type']['completed']: #game is over
                     status = {'x': 0,
                               'y': 28,
                               'val': "FINAL"}
