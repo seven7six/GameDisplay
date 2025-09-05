@@ -162,11 +162,12 @@ while True:
 
                 # if competitors[0]['team']['abbreviation'] == favourite_team or competitors[1]['team']['abbreviation'] == favourite_team:
                 #     time.sleep(15) # pause longer on the bears when they are playing
-                if len(comp) == 1:
+
+                if len(today_games) == 1:
                     time.sleep(60)
-                elif len(comp) == 2:
+                elif len(today_games) == 2:
                     time.sleep(30)
-                elif len(comp) == 3:
+                elif len(today_games) == 3:
                     time.sleep(20)
                 else:
                     time.sleep(15) # all other teams delay
