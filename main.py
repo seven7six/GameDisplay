@@ -16,7 +16,17 @@ favourite_team = "Bears" # input favourite team and when they are playing show n
 prev_game_data = []
 
 while True:
-    response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
+    try:
+        response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
+    except Exception as e:
+        print(e)
+        time.sleep(120)
+        try:
+            response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
+        except Exception as e:
+            print(e)
+            time.sleep(600)
+            response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
     data = response.json() if response and response.status_code == 200 else None
 
     now = datetime.now()
