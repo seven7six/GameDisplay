@@ -195,5 +195,5 @@ while True:
                 wled.static_wled_text(text1,text2,"555555","000000")
                 pointer += 1
                 time.sleep(delay)
-                wled.celebrate()
+                # wled.celebrate()
             sleeping += delay
