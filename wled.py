@@ -313,8 +313,10 @@ def celebrate():
             pingable = ping_responses.success()
             print(f"{wled_ip} ping response was {ping_responses.success()}")
             time.sleep(10)
+            return False
     time.sleep(6) # let the animation run tweak this longer if the animation is frozen to the screen after playing
     clear_wled()
+    return True
 
 # Examples
 # set_wled_text("GO BEARS!")

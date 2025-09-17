@@ -82,6 +82,7 @@ while True:
             prev_game_data = today_games
 
     if len(today_games) > 0:
+        reset = False
         for event in today_games:
             for comp in (event['competitions']):
                 competitors = comp['competitors']
@@ -168,21 +169,37 @@ while True:
                                         prev_game_data = today_games
                                         team2 += "*"
 
-                wled.static_wled_text(team1, team2,"555555","000000", status)
-
-                # if competitors[0]['team']['abbreviation'] == favourite_team or competitors[1]['team']['abbreviation'] == favourite_team:
-                #     time.sleep(15) # pause longer on the bears when they are playing
-
-                if len(today_games) == 1:
-                    time.sleep(60)
-                elif len(today_games) == 2:
-                    time.sleep(30)
-                elif len(today_games) == 3:
-                    time.sleep(20)
+                if not wled.static_wled_text(team1, team2,"555555","000000", status):
+                    reset = True
+                    break # escape the inner for loop after the sign lost connection, forcing a refresh
                 else:
-                    time.sleep(15) # all other teams delay
+                    if len(today_games) == 1:
+                        time.sleep(55)
+                        if not comp['status']['type']['completed']:
+                            wled.static_wled_text(f"Q{comp['status']['period']}", comp['status']['displayClock'], "555555","000000",None)
+                        time.sleep(5)
+                    elif len(today_games) == 2:
+                        time.sleep(25)
+                        if not comp['status']['type']['completed']:
+                            wled.static_wled_text(f"Q{comp['status']['period']}", comp['status']['displayClock'], "555555","000000",None)
+                        time.sleep(5)
+                    elif len(today_games) == 3:
+                        time.sleep(15)
+                        if not comp['status']['type']['completed']:
+                            wled.static_wled_text(f"Q{comp['status']['period']}", comp['status']['displayClock'], "555555","000000",None)
+                        time.sleep(5)
+                    else:
+                        time.sleep(15) # all other teams delay
+            if reset:
+                break # escape the outer for loop after after the sign lost connection, forcing a refresh
+
+        # after a cycle display the time
+        wled.static_wled_text(datetime.now().strftime("%b %d"), datetime.now().strftime("%I:%M %p"), "555555","000000", None)
+        time.sleep(5)
     else:
         print("No Game Today")
+        wled.static_wled_text(datetime.now().strftime("%b %d"), datetime.now().strftime("%I:%M %p"), "555555", "000000",None)
+        time.sleep(10)
         sleeping = 0
         delay = 5
         stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
