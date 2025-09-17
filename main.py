@@ -202,7 +202,7 @@ while True:
         time.sleep(10)
         sleeping = 0
         delay = 5
-        stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'COST', 'CP.TO', 'CNR.TO', 'DOL.TO', 'ENB.TO', 'FTS.TO', 'PZA.TO', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
+        stocks = ['SPY', 'XEQT.TO', 'VIDY.TO', 'AC.TO', 'CCL', 'NVDA', 'RIVN', 'TSLA', 'BTC-CAD']
         while sleeping < 3600:
             text = ""
             pointer = 0
