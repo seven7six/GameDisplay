@@ -169,23 +169,23 @@ while True:
                                         prev_game_data = today_games
                                         team2 += "*"
 
-                if not wled.static_wled_text(team1, team2,"555555","000000", status):
+                if wled.static_wled_text(team1, team2,"555555","000000", status):
                     reset = True
                     break # escape the inner for loop after the sign lost connection, forcing a refresh
                 else:
                     if len(today_games) == 1:
                         time.sleep(55)
-                        if not comp['status']['type']['completed']:
+                        if not comp['status']['type']['completed'] and comp['status']['type']['state'] != "pre":
                             wled.static_wled_text(f"Q{comp['status']['period']}", comp['status']['displayClock'], "555555","000000",None)
                         time.sleep(5)
                     elif len(today_games) == 2:
                         time.sleep(25)
-                        if not comp['status']['type']['completed']:
+                        if not comp['status']['type']['completed'] and comp['status']['type']['state'] != "pre":
                             wled.static_wled_text(f"Q{comp['status']['period']}", comp['status']['displayClock'], "555555","000000",None)
                         time.sleep(5)
                     elif len(today_games) == 3:
                         time.sleep(15)
-                        if not comp['status']['type']['completed']:
+                        if not comp['status']['type']['completed'] and comp['status']['type']['state'] != "pre":
                             wled.static_wled_text(f"Q{comp['status']['period']}", comp['status']['displayClock'], "555555","000000",None)
                         time.sleep(5)
                     else:
